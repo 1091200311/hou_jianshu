@@ -1,20 +1,9 @@
 package com.soft1611.jianshu.configurer;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
-
 import com.soft1611.jianshu.core.Result;
 import com.soft1611.jianshu.core.ResultCode;
 import com.soft1611.jianshu.core.ServiceException;
@@ -23,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.method.HandlerMethod;
@@ -34,6 +24,15 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Spring MVC 配置
  */
@@ -43,6 +42,30 @@ public class WebMvcConfigurer extends WebMvcConfigurerAdapter {
     private final Logger logger = LoggerFactory.getLogger(WebMvcConfigurer.class);
     @Value("${spring.profiles.active}")
     private String env;//当前激活的配置文件
+
+
+    //跨域配置
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            //重写父类提供的跨域请求处理的接口
+            public void addCorsMappings(CorsRegistry registry) {
+                //添加映射路径
+                registry.addMapping("/**")
+                        //放行哪些原始域
+                        .allowedOrigins("*")
+                        //是否发送Cookie信息
+                        .allowCredentials(true)
+                        //放行哪些原始域(请求方式)
+                        .allowedMethods("GET", "POST", "PUT", "DELETE")
+                        //放行哪些原始域(头部信息)
+                        .allowedHeaders("*")
+                        //暴露哪些头部信息（因为跨域访问默认不能获取全部头部信息）
+                        .exposedHeaders("Header1", "Header2");
+            }
+        };
+    }
 
     //使用阿里 FastJson 作为JSON MessageConverter
     @Override

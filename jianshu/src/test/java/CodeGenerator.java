@@ -13,6 +13,7 @@ import java.util.*;
 
 import static com.soft1611.jianshu.core.ProjectConstant.*;
 
+
 /**
  * 代码生成器，根据数据表名称生成对应的Model、Mapper、Service、Controller简化开发。
  */

@@ -1,4 +1,4 @@
-package com.example.jianshu;
+package com.soft1611.jianshu;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
